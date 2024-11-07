@@ -1,0 +1,6 @@
+The files contained in this folder are too large
+to be uploaded onto github. To see this dataset,
+access the data, go to either 
+https://www.kaggle.com/datasets/chethuhn/network-intrusion-dataset
+or
+https://www.unb.ca/cic/datasets/ids-2017.html.
