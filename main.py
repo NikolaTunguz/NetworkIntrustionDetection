@@ -1,4 +1,5 @@
 from Data import data_class
+from Models import xgboost_class
 
 def main():
     files = [
@@ -11,13 +12,18 @@ def main():
             'Data/Tuesday-WorkingHours.pcap_ISCX.csv',
             'Data/Wednesday-workingHours.pcap_ISCX.csv'
             ]
-            
+    
     data_processor = data_class.DataProcessor(files)
     data = data_processor.get_data()
 
-    print(data.head())
+    labels = data['Label']
+    features = data.drop(columns = ['Label'])
 
+    xgboost = xgboost_class.MyXGBoost(features, labels)
+    xgboost.train()
+    accuracy = xgboost.evaluate()
 
+    print(accuracy)
 
 
 if __name__ == '__main__':
