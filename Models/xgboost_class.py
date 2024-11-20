@@ -1,19 +1,19 @@
 from xgboost import XGBClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-from sklearn.metrics import mean_absolute_percentage_error
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import classification_report
 
 class MyXGBoost:
     def __init__(self, X, y):  
         #core model variables
         self.model = XGBClassifier( 
-            objective = 'binary:logistic', #criteria 
-            n_estimators = 100,             #number of boosting iterations
+            objective = 'multi:softmax',     #criteria 
+            n_estimators = 100,              #number of boosting iterations
             max_depth = 5,                   #max tree depth
-            learning_rate = 0.03,            #learning rate
+            learning_rate = 0.2,             #learning rate
             subsample = 0.7,                 #percent sampling of data
             colsample_bytree = 0.8,          #percent sampling of attributes
-            alpha = 0.1                      #L1 regularization, higher = more conservative model
             )
         
         self.X = X
@@ -44,4 +44,6 @@ class MyXGBoost:
     def evaluate(self):
         prediction = self.predict()
         accuracy = accuracy_score(self.y_test, prediction)
-        return accuracy
+        cm = confusion_matrix(self.y_test, prediction)
+        report = classification_report(self.y_test, prediction)
+        return accuracy, cm, report

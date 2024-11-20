@@ -22,6 +22,8 @@ class DataProcessor():
         self.data = pd.concat(files, ignore_index = True)
 
     def preprocess(self):
+        
+        print(self.data[' Label'].unique())
         #removing whitespace from column names
         self.data.columns = self.data.columns.str.strip()
 
@@ -45,6 +47,9 @@ class DataProcessor():
         #combining modified data back together
         self.data = pd.DataFrame( scaled_features, columns = features.columns)
         self.data['Label'] = encoded_labels
+
+        
+        print(self.data['Label'].unique())
 
     def get_data(self):
         #preprocess and return the data
