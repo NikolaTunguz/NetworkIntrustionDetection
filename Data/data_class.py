@@ -1,9 +1,11 @@
+import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import LabelEncoder
 
 class DataProcessor():
     def __init__(self, files):
+        #initialize variables and read data
         self.data = None
         self.file_names = files
 
@@ -20,7 +22,12 @@ class DataProcessor():
         self.data = pd.concat(files, ignore_index = True)
 
     def preprocess(self):
-        #removing null rows
+        #removing whitespace from column names
+        self.data.columns = self.data.columns.str.strip()
+
+        #removing null rows and infinity values
+        self.data.replace(np.inf, np.nan, inplace = True)
+        self.data.replace(-np.inf, np.nan, inplace = True)
         self.data = self.data.dropna()
         
         #separating features and labels for processing
@@ -39,7 +46,7 @@ class DataProcessor():
         self.data = pd.DataFrame( scaled_features, columns = features.columns)
         self.data['Label'] = encoded_labels
 
-    def get_data(self, preprocess):
-        if preprocess == True:
-            self.preprocess()
+    def get_data(self):
+        #preprocess and return the data
+        self.preprocess()
         return self.data
