@@ -32,7 +32,7 @@ class MyXGBoost:
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.X, self.y, test_size = 0.2, random_state = 42)
 
     #function to train the model
-    def train(self):
+    def train_model(self):
         self.model.fit(self.X_train, self.y_train)
 
     #private function to predict on test dataset
