@@ -43,8 +43,6 @@ class MyNN(nn.Module):
         self.fc4 = nn.Linear(hidden3, output_dim)
 
         self.relu = nn.ReLU()
-        #self.softmax = nn.Softmax(dim = 1)
-        #self.dropout = nn.Dropout(0.5)
 
         self.prepare_data()
 
@@ -60,9 +58,6 @@ class MyNN(nn.Module):
         output = self.relu(output)
 
         output = self.fc4(output)
-
-        #output = self.softmax(output)
-        #output = self.dropout(output)
 
         return output
         
@@ -91,33 +86,34 @@ class MyNN(nn.Module):
         criterion = nn.CrossEntropyLoss()
         optimizer = torch.optim.Adam(self.parameters(), lr = learning_rate)
 
-        #epoch_losses = []
+        epoch_losses = []
         #training loop
         self.to(self.device)
         for epoch in range(num_epochs):
             #print(epoch)
-            #curr_loss = 0.0
+            curr_loss = 0.0
 
             self.train()
-            for (features, targets) in self.train_loader:
-                features, targets = features.to(self.device), targets.to(self.device)
+            for features, labels in self.train_loader:
+                features, labels = features.to(self.device), labels.to(self.device)
 
                 optimizer.zero_grad()
                 predictions = self(features)
 
-                loss = criterion(predictions, targets)
+                loss = criterion(predictions, labels)
                 loss.backward()
                 optimizer.step()
 
-                #curr_loss += loss.item()
+                curr_loss += loss.item()
 
-            #epoch_losses.append(curr_loss / len(self.train_loader))
+            epoch_losses.append(curr_loss / len(self.train_loader))
         
-        #plt.plot(range(1, num_epochs + 1), epoch_losses, marker='o')
-        #plt.xlabel('Epoch')
-        #plt.ylabel('Loss')
-        #plt.title('Training Loss Over Epochs')
-        #plt.show()
+        #plotting loss
+        plt.plot(range(1, num_epochs + 1), epoch_losses, marker='o')
+        plt.xlabel('Epoch')
+        plt.ylabel('Loss')
+        plt.title('Training Loss Over Epochs')
+        plt.show()
 
     def predict(self):
         self.eval()
@@ -125,8 +121,8 @@ class MyNN(nn.Module):
 
         self.to(self.device)
         with torch.no_grad():
-            for features, targets in self.test_loader:
-                features, targets = features.to(self.device), targets.to(self.device)
+            for features, labels in self.test_loader:
+                features, labels = features.to(self.device), labels.to(self.device)
 
                 #forward pass
                 output = self(features)
